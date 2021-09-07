@@ -22,6 +22,9 @@ const celebs = [
   }
 ];
 
+
+
+
 Celeb.insertMany(celebs)
 .then((celebs) => {
   console.log(`Success - ${celebs.length} seeded to the database`);

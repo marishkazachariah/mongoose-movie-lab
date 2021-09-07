@@ -6,5 +6,5 @@ const celebSchema = new Schema({
     catchphrase: String
 });
 
-const Celeb = mongoose.model('Book', celebSchema);
+const Celeb = mongoose.model('Celeb', celebSchema);
 module.exports = Celeb;

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { route } = require('../app');
 const Celeb = require('../models/Celeb');
+// const Movie = require('../models/Movie');
 
 router.get("/", (req, res, next) => res.render('index'));
 
