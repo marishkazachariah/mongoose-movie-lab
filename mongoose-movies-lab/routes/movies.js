@@ -9,7 +9,7 @@ router.get("/movies", (req, res, next) => {
   Movie.find()
     .populate("cast")
     .then((moviesFromDB) => {
-      console.log(moviesFromDB);
+      // console.log(moviesFromDB);
       res.render("movies", { moviesList: moviesFromDB });
     })
     .catch((err) => {
@@ -25,7 +25,7 @@ router.get("/movies/new", (req, res, next) => {
 });
 
 router.post("/movies", (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { title, genre, plot, cast } = req.body;
   Movie.create({
     title: title,
@@ -34,7 +34,7 @@ router.post("/movies", (req, res, next) => {
     cast: cast,
   })
     .then((createdMovie) => {
-      console.log("New Movie:", createdMovie);
+      // console.log("New Movie:", createdMovie);
       res.redirect("/movies");
       // res.redirect(`/movies/${createdMovie._id}`);
     })
@@ -49,6 +49,23 @@ router.get("/movies/:id", (req, res, next) => {
     })
     .catch((err) => {
       next(err);
+    });
+});
+
+router.get("/movies/:id/edit", (req, res) => {
+    Movie.findById(req.params.id).then(movies => {
+      Celeb.find().then(celeb => {
+          let selected = "";
+          let list = "";
+          celeb.forEach(actor => {
+            movies.cast.includes(actor._id) ? selected = "selected" : selected = "";
+            list += `<option value="${actor._id}" ${selected}>${actor.name}</option>`
+          })
+          res.render("movies/edit", { movies, list });
+        })
+    }).catch(err => {
+        console.log(err);
+        next(err);
     });
 });
 
@@ -67,25 +84,11 @@ router.post("/movies/:id", (req, res, next) => {
   )
     .then((updatedMovie) => {
       console.log(updatedMovie);
-      //res.redirect("/movies");
-      res.redirect(`/movies/${updatedMovie._id}`);
+      res.redirect("/movies");
     })
     .catch((err) => {
       next(err);
     });
-});
-
-router.get("/movies/:id/edit", (req, res, next) => {
-  Celeb.find().then((celebs) =>
-    Movie.findById(req.params.id)
-      .populate("cast")
-      .then((moviesFromDB) => {
-        res.render("movies/edit", { movies: moviesFromDB, celebs });
-      })
-      .catch((err) => {
-        next(err);
-      })
-  );
 });
 
 module.exports = router;
